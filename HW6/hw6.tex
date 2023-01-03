@@ -1,0 +1,257 @@
+\documentclass[a4paper]{article}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{paralist}
+\usepackage{epstopdf}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage{paralist}
+%\usepackage[svgname]{xcolor}
+\usepackage{enumerate}
+\usepackage{array}
+\usepackage{times}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{comment}
+\usepackage{environ}
+\usepackage{times}
+\usepackage{textcomp}
+\usepackage{caption}
+\usepackage{bbm}
+
+
+\urlstyle{rm}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[]
+\newtheorem{conjecture}{Conjecture}[]
+\newtheorem{example}{Example}[]
+\newtheorem{theorem}{Theorem}[]
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+
+\floatname{algorithm}{Procedure}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\br}[1]{\{#1\}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\definecolor{C0}{HTML}{1F77B4}
+\definecolor{C1}{HTML}{FF7F0E}
+\definecolor{C2}{HTML}{2ca02c}
+\definecolor{C3}{HTML}{d62728}
+\definecolor{C4}{HTML}{9467bd}
+\definecolor{C5}{HTML}{8c564b}
+\definecolor{C6}{HTML}{e377c2}
+\definecolor{C7}{HTML}{7F7F7F}
+\definecolor{C8}{HTML}{bcbd22}
+\definecolor{C9}{HTML}{17BECF}
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\sgn}{\mathrm{sgn}}
+
+\newcommand{\vc}[1]{\boldsymbol{#1}}
+\newcommand{\xv}{\vc{x}}
+\newcommand{\Sigmav}{\vc{\Sigma}}
+\newcommand{\alphav}{\vc{\alpha}}
+\newcommand{\muv}{\vc{\mu}}
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+\def\x{\mathbf x}
+\def\y{\mathbf y}
+\def\w{\mathbf w}
+\def\v{\mathbf v}
+\def\E{\mathbb E}
+\def\R{\mathbb R}
+\def\V{\mathbb V}
+\def\ind{\mathbbm 1}
+
+% TO SHOW SOLUTIONS, include following (else comment out):
+\newenvironment{soln}{
+    \leavevmode\color{blue}\ignorespaces
+}{}
+
+
+\hypersetup{
+%    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\geometry{
+  top=1in,            % <-- you want to adjust this
+  inner=1in,
+  outer=1in,
+  bottom=1in,
+  headheight=3em,       % <-- and this
+  headsep=2em,          % <-- and this
+  footskip=3em,
+}
+
+
+\pagestyle{fancyplain}
+\lhead{\fancyplain{}{Homework 6}}
+\rhead{\fancyplain{}{CS 760 Machine Learning}}
+\cfoot{\thepage}
+
+\title{\textsc{Homework 6}} % Title
+
+%%% NOTE:  Replace 'NAME HERE' etc., and delete any "\red{}" wrappers (so it won't show up as red)
+
+\author{
+\red{$>>$NAME HERE$<<$} \\
+\red{$>>$ID HERE$<<$}\\
+} 
+
+\date{}
+
+\begin{document}
+
+\maketitle 
+
+
+\textbf{Instructions:} 
+You can choose any programming language as long as you implement the algorithm from scratch. Use this latex file as a template to develop your homework.
+Submit your homework on time as a single pdf file to Canvas.
+Please check Piazza for updates about the homework.\\
+
+
+\section{Kernel SVM [30pts]}
+Consider the following kernel function defined over $\mathbf z,\mathbf z'\in Z$, where $Z$ is some set:
+\[
+\kappa(\mathbf z,\mathbf z')=\begin{cases}
+    1 \quad \mathrm{if }\;\; \mathbf z=\mathbf z',\\
+0\quad \mathrm{otherwise}.
+\end{cases}
+\]
+\begin{enumerate}
+    \item (10 pts) Prove that for any positive integer $m$, any $\mathbf z_1, \ldots,\mathbf z_m \in Z$, the $m\times m$ kernel matrix $\mathbf K = [\mathbf K_{ij} ]$ is
+positive semi-definite, where $\mathbf K_{ij} = \kappa(\mathbf z_i
+, \mathbf z_j )$ for $i, j = 1 \ldots m$. (Let us assume that for $i \neq j$, we have
+$\mathbf z_i \neq \mathbf z_j$) Hint: An  $m\times m$  matrix $K $ is positive semi-definite if  $\forall \mathbf u\in \R^d: \mathbf u^\top \mathbf K\mathbf u\geq 0$.
+\item (10 pts) Given a training set $(\mathbf z_1, y_1), \ldots,(\mathbf z_n, y_n)$ with binary labels, the dual SVM problem with the above
+kernel $\kappa$ will have parameters $a_1, \ldots, a_n,b \in \R$. (Let us assume that for $i \neq j$, we have
+$\mathbf z_i \neq \mathbf z_j$) The predictor
+for input $\mathbf z$ takes the form
+\[
+f(\mathbf z)=\sum_{i=1}^na_iy_i\kappa(\mathbf z_i,z) +b\;.
+\]
+Recall that the label prediction is $\mathrm{sgn}(f(\mathbf z))$. Prove that there exist $a_1, \ldots, a_n, b$ such that $f$ correctly separates
+the training set. In other words, $\kappa$ induces a feature space rich enough such that in it, any training set can be linearly separated.
+\item (10 pts) How does that $f$ predict input $\mathbf z$ that is not in the training set?
+\end{enumerate}
+
+Comment: One useful property of kernel functions is that the input space $Z$ does not need to be a vector space; in
+other words, $\mathbf z$ does not need to be a feature vector. For all we know, $Z$ can be all the turkeys in the world. As long as we
+can compute $\kappa(\mathbf z, \mathbf z')$, kernel SVM works on turkeys.
+
+\section{Chow-Liu Algorithm [30 pts]}
+Suppose we wish to construct a directed graphical model for 3 features $X$, $Y$, and $Z$ using the Chow-Liu algorithm. We are given data from 100 independent experiments where each feature is binary and takes value $T$ or $F$. Below is a table summarizing the observations of the experiment:
+
+\begin{table}[H]
+        \centering
+                \begin{tabular}{cccc}
+                           $X$ & $Y$ & $Z$ & Count \\
+                                \hline
+                                T & T & T & 36 \\
+                                \hline
+                                T & T & F & 4 \\
+                                \hline
+                                T & F & T & 2 \\
+                                \hline
+                                T & F & F & 8 \\
+                                \hline
+                                F & T & T & 9 \\
+                                \hline
+                                F & T & F & 1 \\
+                                \hline
+                                F & F & T & 8 \\
+                                \hline
+                                F & F & F & 32 \\
+                                \hline
+                \end{tabular}
+\end{table}
+
+\begin{enumerate}
+	\item Compute the mutual information $I(X, Y)$ based on the frequencies observed in the data. (5 pts)
+	\item Compute the mutual information $I(X, Z)$ based on the frequencies observed in the data. (5 pts)
+	\item Compute the mutual information $I(Z, Y)$ based on the frequencies observed in the data. (5 pts)
+	\item Which undirected edges will be selected by the Chow-Liu algorithm as the maximum spanning tree? (5 pts)
+	\item Root your tree at node $X$, and assign directions to the selected edges. (10 pts)
+\end{enumerate}
+
+\section{Game of Classifiers [60pts]}
+\subsection{Implementation}
+Implement the following models in the choice of your programming language. Include slack variables in SVM implementation if needed. You can use autograd features of PyTorch, TensorFlow, etc., or derive gradients on your own (but do not use inbuilt models for SVM, Kernel SVM, and Logistic Regression from libraries).
+\begin{itemize}
+    \item Implement Linear SVM (without kernels).
+    \item Implement Kernel SVM, with options for linear, rbf, and polynomial kernels. You should keep the kernel parameters tunable (e.g., do not fix the degree of polynomial kernels but keep it as a variable and play with different values of it.) Is Linear SVM a special case of Kernel SVMs?
+\item Implement Logistic Regression with and without kernels (use same kernels as above).
+\end{itemize}
+\subsection{ Synthetic Dataset-1 (20 pts)}
+Generate a 2-D dataset as follows:
+Let $\mu = 2.5$ and $\mathbf I_2$ be the $2 \times 2$ identity matrix. Generate points for the positive and negative classes, respectively
+from $\mathcal{N} ([\mu, 0], \mathbf I_2)$, and $\mathcal{N} ([-\mu, 0], \mathbf I_2)$. For each class, generate 750 points (1500 in total). Randomly create train, validation, and test splits of 1000, 250, and 250 points, respectively. Do the following with this dataset:
+\begin{enumerate}
+    \item  (5 pts) Train your Linear SVM, Logistic Regression models and report decision boundaries and test accuracies.
+
+\item (5 pts) Show the decision boundaries with $k$-NN and Naive Bayes Classifiers. (You can use library implementations or implement from scratch. Figure out the hyper-parameters using the validation set.)
+
+\item (5 pts) Repeat the process by varying $\mu$ from 1.0 to 2.4 with a step size of 0.2 for each value of $\mu$ to obtain test
+accuracies of the models and plot ( $\mu$ on $x$-axis and test accuracy on $y$-axis). (You will have a curve for
+each of the 4-classifiers mentioned above.)
+\item (5 pts) What are your conclusions from this exercise?
+\end{enumerate}
+\subsection{Synthetic Dataset-2 (20 pts)}
+Generate 1500 data points from the 2-D circles dataset of sklearn:\begin{verbatim}
+    sklearn.datasets.make_circles
+\end{verbatim}
+Randomly create train, validation, and test splits of 1000, 250, and 250 points, respectively. Evaluate the above classifiers in this setting.
+\begin{enumerate}
+    \item ( 5 pts) Show decision boundaries for Linear SVM and Logistic Regression classifiers.
+\item ( 5 pts) Show decision boundaries for Kernel SVM and Kernel Logistic Regression ( use rbf, polynomial
+kernels). Try different values of hyperparameters, and report results with whichever works best.
+
+\item ( 5 pts ) Train Neural Network from HW4, and $k$-NN classifiers on this dataset and show decision boundaries. ( You can use library implementation for these classifiers).
+
+\item ( 5 pts ) What are your conclusions from this exercise?
+\end{enumerate}
+\subsection{Evaluation on Real Dataset (20 pts)}
+Let's put all this to some real use. For this problem, use the Wisconsin Breast Cancer dataset. You can download it from the sklearn library:
+\begin{verbatim}
+   sklearn.datasets.load_breast_cancer
+\end{verbatim}
+\begin{enumerate}
+    \item  (10 pts) Do all the points of Section 3.3 in this dataset. Since these are high-dimensional data, you do not have to show the decision boundaries. Report test accuracies for these classifiers and discuss your findings.
+\item (10 pts) In addition, you also want to figure out the important features which determine the class. Which regularization will you use for this? Upgrade your SVM, Kernel SVM implementation to include this
+regularization. Discuss the important features that you obtain by running your regularized SVM on this dataset. (You might need to normalize this dataset before training any classifier.)
+\end{enumerate}
+\end{document}
